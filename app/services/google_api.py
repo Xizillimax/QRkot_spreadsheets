@@ -3,8 +3,13 @@ from datetime import datetime
 
 from aiogoogle import Aiogoogle
 
-from app.core.config import settings
-from app.services.constants import FORMAT_DATE, SPREADSHEET_BODY, TABLE_VALUES
+from app.services.constants import (
+    FORMAT_DATE,
+    SPREADSHEET_BODY,
+    TABLE_VALUES,
+    PERMISSIONS_BODY,
+    UPDATE_BODY
+)
 
 
 async def spreadsheets_create(wrapper_services: Aiogoogle) -> str:
@@ -17,22 +22,19 @@ async def spreadsheets_create(wrapper_services: Aiogoogle) -> str:
     response = await wrapper_services.as_service_account(
         service.spreadsheets.create(json=spreadsheet_body)
     )
-    spreadsheetid = response['spreadsheetId']
+    spreadsheetid = response['spreadsheet_Id']
     return spreadsheetid
 
 
 async def set_user_permissions(
-        spreadsheetid: str,
+        spreadsheet_id: str,
         wrapper_services: Aiogoogle
 ) -> None:
-    permissions_body = {'type': 'user',
-                        'role': 'writer',
-                        'emailAddress': settings.email}
     service = await wrapper_services.discover('drive', 'v3')
     await wrapper_services.as_service_account(
         service.permissions.create(
-            fileId=spreadsheetid,
-            json=permissions_body,
+            fileId=spreadsheet_id,
+            json=PERMISSIONS_BODY,
             fields="id"
         ))
 
@@ -54,10 +56,8 @@ async def spreadsheets_update_value(
         ]
         table_values.append(project_row)
 
-    update_body = {
-        'majorDimension': 'ROWS',
-        'values': table_values
-    }
+    update_body = copy.deepcopy(UPDATE_BODY)
+    update_body['values'] = table_values
     rows = len(table_values)
     columns = max(map(len, table_values))
     await wrapper_services.as_service_account(

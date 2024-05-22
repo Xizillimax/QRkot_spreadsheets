@@ -1,3 +1,5 @@
+from app.core.config import settings
+
 FORMAT_DATE = "%Y/%m/%d %H:%M:%S"
 SPREADSHEET_BODY = {
     'properties': {'title': 'Отчет от определенной даты',
@@ -14,3 +16,13 @@ TABLE_VALUES = [
     ['Топ проектов по скорости закрытия'],
     ['Название проекта', 'Время сбора', 'Описание']
 ]
+
+PERMISSIONS_BODY = {'type': 'user',
+                    'role': 'writer',
+                    'emailAddress': settings.email
+                    }
+
+UPDATE_BODY = {
+        'majorDimension': 'ROWS',
+        'values': 'table_values'
+}
