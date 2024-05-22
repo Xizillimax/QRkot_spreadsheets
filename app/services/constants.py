@@ -17,12 +17,13 @@ TABLE_VALUES = [
     ['Название проекта', 'Время сбора', 'Описание']
 ]
 
-PERMISSIONS_BODY = {'type': 'user',
-                    'role': 'writer',
-                    'emailAddress': settings.email
-                    }
+PERMISSIONS_BODY = {
+    'type': 'user',
+    'role': 'writer',
+    'emailAddress': settings.email
+}
 
 UPDATE_BODY = {
-        'majorDimension': 'ROWS',
-        'values': 'table_values'
+    'majorDimension': 'ROWS',
+    'values': 'table_values'
 }
